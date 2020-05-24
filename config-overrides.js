@@ -1,5 +1,7 @@
 module.exports = function override(config, env) {
   //do stuff with the webpack config...
-  console.debug("config-overrides.js was passed.");
+  config.module.rules.forEach(element => {
+    console.debug(element);
+  });
   return config;
 }
