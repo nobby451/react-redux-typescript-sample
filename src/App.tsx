@@ -1,57 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
 import './App.css';
+import CounterSample from './CounterSample';
+import UserPage from './UserPage';
+import SettingsPage from './SettingsPage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    /*
+    ContextProviderで、RouterContextとHistoryContextを子孫コンポーネントに渡している
+    これによりここより下ではReact Routerのコンポーネントが使えるようになる
+    */
+    <BrowserRouter>
+      <ul>
+        {/*
+        普通にa要素とhref属性を使うとページ全体の再読み込みとなり、Stateも破棄されてしまう
+        Linkを使うとJSでうまいことやってくれて、リロードなしのページ遷移を実現する
+        */}
+        <li><Link to='/'>CounterSample</Link></li>
+        <li><Link to='/user'>UserPage</Link></li>
+        <li><Link to='/settings'>SettingsPage</Link></li>
+      </ul>
+      {/*
+      現在のURLに対し、Switch以下の最初にマッチしたRoute要素のみをレンダリングする
+      今はexactを使っているので複数マッチすることはないが、Switchを使わないと複数マッチした場合全てレンダリングされる
+      実は実装的には、直下の子コンポーネントを舐めて、path属性などから最初にマッチしたもののみをchildrenとする挙動になっているので、
+      子コンポーネントはRouteじゃなくてもRouteと同じpropsを持つものならマッチングする（はず）
+      */}
+      <Switch>
+        {/*
+        path属性とマッチしたコンポーネントをレンダリングする
+        */}
+        <Route exact path="/user" component={UserPage} />
+        <Route exact path="/settings" component={SettingsPage} />
+        <Route exact path="/" component={CounterSample} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
