@@ -6,6 +6,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState = {
   name: '',
   age: 0,
+  ip: '',
 };
 
 /*
@@ -38,11 +39,14 @@ export const { actions: userActions, reducer: userReducer } = createSlice({
     setAge: (state, action: PayloadAction<number>) => {
       state.age = action.payload;
     },
+    setIp: (state, action: PayloadAction<string>) => {
+      state.ip = action.payload;
+    },
     reset: (_state, _action: PayloadAction<undefined>) => {
       /*
       新たにStateを作成し直す場合はもちろん返す必要がある
       */
-      return { name: '', age: 0 };
+      return { name: '', age: 0, ip: '' };
     },
   },
 });

@@ -1,7 +1,18 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
 import counterReducer from '../features/counter/counterSlice';
 import { userReducer } from '../slices/userSlice';
+import rootSaga from './sagas';
+
+/*
+Redux Toolkitがオススメするミドルウェア詰め合わせを取得している
+redux-thunkも入っているのだが、redux-sagaを使う選択をした以上出番はないはずなので、
+要らなくなったらoptionsで消すべきだろう
+*/
+const middleware = getDefaultMiddleware();
+const sagaMiddleware = createSagaMiddleware();
+middleware.push(sagaMiddleware);
 
 /*
 このアプリで使用するRedux Storeを作成する
@@ -16,7 +27,21 @@ export const store = configureStore({
     counter: counterReducer,
     user: userReducer,
   },
+  /*
+  Storeにミドルウェアを設定
+  ミドルウェアとは、Reduxの間に挟まってなんか色々便利な処理をしてくれる奴ら
+  */
+  middleware,
 });
+
+/*
+Sagaってのはスレッドみたいなもの（厳密には違うらしい？）が裏で待ち受けて、
+Actionのdispatchを受け取ったら非同期処理や副作用のある処理をして、
+その結果を受けてまたActionをdispatchしてReducerに渡すもんらしい
+Reducerの中でそれらの処理をすると不都合が起こるので、Sagaに依頼する感じみたい
+で、ここでSagaを待機状態にしてる
+*/
+sagaMiddleware.run(rootSaga);
 
 /*
 全体Stateの型情報を定義している
