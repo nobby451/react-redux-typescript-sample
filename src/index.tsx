@@ -8,6 +8,10 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
+    {/*
+    Redux Storeを子孫コンポーネントで使えるようにするContext Provider
+    この下ではreact-reduxのHookが使えるようになる
+    */}
     <Provider store={store}>
       <App />
     </Provider>
