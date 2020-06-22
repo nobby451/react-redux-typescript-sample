@@ -1,18 +1,11 @@
-import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import counterReducer from '../features/counter/counterSlice';
 import { userReducer } from '../slices/userSlice';
 import rootSaga from './sagas';
 
-/*
-Redux Toolkitがオススメするミドルウェア詰め合わせを取得している
-redux-thunkも入っているのだが、redux-sagaを使う選択をした以上出番はないはずなので、
-要らなくなったらoptionsで消すべきだろう
-*/
-const middleware = getDefaultMiddleware();
 const sagaMiddleware = createSagaMiddleware();
-middleware.push(sagaMiddleware);
 
 /*
 このアプリで使用するRedux Storeを作成する
@@ -29,9 +22,16 @@ export const store = configureStore({
   },
   /*
   Storeにミドルウェアを設定
-  ミドルウェアとは、Reduxの間に挟まってなんか色々便利な処理をしてくれる奴ら
+  ミドルウェアとは、dispatchされたActionがReducerに渡る前にインターセプトして色々な処理をするモジュール
+  複数追加した場合チェーンで次のミドルウェアに渡し、最終的にReducerに届く
+  getDefaultMiddlewareはRedux Toolkitがオススメするミドルウェア詰め合わせを取得する
+  redux-thunkも入っているのだが、redux-sagaを使う選択をした以上出番はないはずなので、
+  要らなくなったらoptionsで消すべきだろう
+  最新バージョンからミドルウェアの配列以外に、getDefaultMiddlewareを引数にミドルウェアの配列を返す関数を渡せるようになった
+  TypeScriptで型情報が欠落するのを防げるらしいが、どう変わったかはよくわからない
+  だがせっかくなので使ってみる程度
   */
-  middleware,
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(sagaMiddleware),
 });
 
 /*
