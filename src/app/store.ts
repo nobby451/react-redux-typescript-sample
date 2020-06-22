@@ -1,4 +1,4 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, /* ThunkAction, Action */ } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import counterReducer from '../features/counter/counterSlice';
@@ -25,13 +25,12 @@ export const store = configureStore({
   ミドルウェアとは、dispatchされたActionがReducerに渡る前にインターセプトして色々な処理をするモジュール
   複数追加した場合チェーンで次のミドルウェアに渡し、最終的にReducerに届く
   getDefaultMiddlewareはRedux Toolkitがオススメするミドルウェア詰め合わせを取得する
-  redux-thunkも入っているのだが、redux-sagaを使う選択をした以上出番はないはずなので、
-  要らなくなったらoptionsで消すべきだろう
+  redux-thunkも入っているのだが、redux-sagaに置き換えて不要になったので、optionsで取得しないように設定する
   最新バージョンからミドルウェアの配列以外に、getDefaultMiddlewareを引数にミドルウェアの配列を返す関数を渡せるようになった
   TypeScriptで型情報が欠落するのを防げるらしいが、どう変わったかはよくわからない
   だがせっかくなので使ってみる程度
   */
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(sagaMiddleware),
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
 });
 
 /*
@@ -50,12 +49,12 @@ store.getStateは全体Stateを返す関数で、typeofしているのでその�
 ReturnTypeで戻り値である全体Stateの型定義を取得できるというわけである
 */
 export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
+/* export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
   unknown,
   Action<string>
->;
+>; */
 
 /*
 部分Stateを簡単に取り出すためのuseSelector関数を更に楽に書くための定義

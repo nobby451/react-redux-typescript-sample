@@ -4,10 +4,11 @@ import {
   decrement,
   increment,
   incrementByAmount,
-  incrementAsync,
+  // incrementAsync,
   selectCount,
 } from './counterSlice';
 import styles from './Counter.module.css';
+import { incrementAsync } from '../../app/sagas';
 
 export function Counter() {
   const count = useSelector(selectCount);
@@ -50,6 +51,10 @@ export function Counter() {
         </button>
         <button
           className={styles.asyncButton}
+          /*
+          redux-thunkではなくredux-sagaで定義したActionCreatorで作ったActionをdispatchする
+          incrementAsyncの引数のシグネチャーは変わってないので、import先が変わっただけである
+          */
           onClick={() => dispatch(incrementAsync(Number(incrementAmount) || 0))}
         >
           Add Async
