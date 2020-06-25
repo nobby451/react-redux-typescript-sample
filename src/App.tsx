@@ -11,7 +11,7 @@ import { useTypedSelector } from './app/store';
 import { intlActions } from './slices/intlSlice';
 
 function App() {
-  const { locale } = useTypedSelector(state => state.intl);
+  const { locale, messages } = useTypedSelector(state => state.intl);
   const dispatch = useDispatch();
   /*
   useEffectで使うコールバックをメモ化する上での成り行きだが、bindActionCreatorsの結果もメモ化する
@@ -73,8 +73,12 @@ function App() {
     このProviderに渡されたpropsからProvider内で生成し、子孫に渡している
     子孫側では、useIntlフックで参照できる
     今の場合、localeが変更されるたびにIntlShapeを再生成している
+    messagesはメッセージ定義で、現在のlocaleに合ったメッセージ定義を渡してやる必要がある
+    Record<string, string>は、任意のstring型のプロパティにstring型の値を持つ型という意味
+    もう一つRecord<string, MessageFormatElement[]>という型も受け付けられるようになっているが、
+    これは、ICUをIntl MessageFormat Parserのparse関数で変換したASTも渡せるということ
     */
-    <IntlProvider locale={locale}>
+    <IntlProvider locale={locale} messages={messages}>
       {/*
       ContextProviderで、RouterContextとHistoryContextを子孫コンポーネントに渡している
       これによりここより下ではReact Routerのコンポーネントが使えるようになる

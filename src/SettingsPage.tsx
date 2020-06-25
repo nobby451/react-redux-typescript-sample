@@ -1,5 +1,5 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 
 const SettingsPage = () => {
   /*
@@ -14,6 +14,10 @@ const SettingsPage = () => {
       intlにはProviderに渡したLocaleがそのまま入っており、今はとりあえずそれを出力している
       */}
       <div>Current Locale: {locale}</div>
+      {/*
+      idにキーを渡すとintlProviderに渡したmessagesから、キー名が一致する値を表示してくれる
+      */}
+      <div><FormattedMessage id="hello" /> <FormattedMessage id="world" /></div>
     </>
   );
 };
