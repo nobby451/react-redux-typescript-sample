@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import counterReducer from '../features/counter/counterSlice';
 import { userReducer } from '../slices/userSlice';
+import { intlReducer } from '../slices/intlSlice';
 import rootSaga from './sagas';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -19,6 +20,7 @@ export const store = configureStore({
   reducer: {
     counter: counterReducer,
     user: userReducer,
+    intl: intlReducer,
   },
   /*
   Storeにミドルウェアを設定
